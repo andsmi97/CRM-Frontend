@@ -1,8 +1,8 @@
 // @flow
 import React, { Component } from "react";
-import Column from "./column";
+import Column from "./Column";
 import { withStyles } from "@material-ui/core/styles";
-import reorder, { reorderDealMap } from "../../reorder";
+import reorder, { reorderDealMap } from "./reorder";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const styles = {

@@ -39,9 +39,7 @@ export const colors = {
   green: "rgb(185, 244, 188)",
   white: "white",
   purple: "rebeccapurple",
-  orange: "#FF991F"
+
 };
 
 export const grid = 8;
-
-export const borderRadius = 2;

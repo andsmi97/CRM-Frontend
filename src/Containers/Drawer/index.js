@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
 import Drawer from "@material-ui/core/Drawer";
@@ -20,9 +21,24 @@ import PipelineIcon from "@material-ui/icons/FilterList";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AssessmentIcon from "@material-ui/icons/Assessment";
-import Board from "../../Components/Board/board";
-import { stageDealMap } from "../../data";
+import Board from "../../Components/Board";
 import Avatar from "@material-ui/core/Avatar";
+import { openSnack, openAlert } from "../../actions";
+
+const mapStateToProps = state => {
+  return {
+    deals: state.dealsReducer
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    openSnack: (type, message) => dispatch(openSnack(type, message)),
+    openAlert: (message, alertFunction) =>
+      dispatch(openAlert(message, alertFunction))
+  };
+};
+
 const drawerWidth = 280;
 
 const styles = theme => ({
@@ -188,7 +204,7 @@ class PersistentDrawerLeft extends React.Component {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Board initial={stageDealMap} withScrollableColumns />
+          <Board initial={this.props.deals} withScrollableColumns />
         </main>
       </div>
     );
@@ -200,4 +216,8 @@ PersistentDrawerLeft.propTypes = {
   theme: PropTypes.object.isRequired
 };
 
-export default withStyles(styles, { withTheme: true })(PersistentDrawerLeft);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles, { withTheme: true })(PersistentDrawerLeft));
+// export default withStyles(styles, { withTheme: true })(PersistentDrawerLeft);

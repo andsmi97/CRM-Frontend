@@ -1,10 +1,10 @@
 // @flow
 import React, { Component } from "react";
 import { Draggable } from "react-beautiful-dnd";
-import DealsList from "../Primatives/DealsList";
-import Title from "../Primatives/title";
+import DealsList from "../../Primatives/DealsList";
+import Title from "../../Primatives/title";
 import { withStyles } from "@material-ui/core/styles";
-import Header from "./header";
+import Header from "../../Primatives/header";
 
 const styles = () => ({
   container: {
