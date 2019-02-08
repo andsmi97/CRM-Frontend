@@ -9,28 +9,20 @@ const reorder = (list, startIndex, endIndex) => {
 
 export default reorder;
 
-export const reorderDealMap = ({
-  dealMap,
-  source,
-  destination,
-}) => {
-  const current  = [...dealMap[source.droppableId]];
-  const next  = [...dealMap[destination.droppableId]];
+export const reorderDealMap = ({ dealMap, source, destination }) => {
+  const current = [...dealMap[source.droppableId]];
+  const next = [...dealMap[destination.droppableId]];
   const target = current[source.index];
 
   // moving to same list
   if (source.droppableId === destination.droppableId) {
-    const reordered  = reorder(
-      current,
-      source.index,
-      destination.index,
-    );
-    const result  = {
+    const reordered = reorder(current, source.index, destination.index);
+    const result = {
       ...dealMap,
-      [source.droppableId]: reordered,
+      [source.droppableId]: reordered
     };
     return {
-      dealMap: result,
+      dealMap: result
     };
   }
 
@@ -41,13 +33,13 @@ export const reorderDealMap = ({
   // insert into next
   next.splice(destination.index, 0, target);
 
-  const result  = {
+  const result = {
     ...dealMap,
     [source.droppableId]: current,
-    [destination.droppableId]: next,
+    [destination.droppableId]: next
   };
 
   return {
-    dealMap: result,
+    dealMap: result
   };
 };

@@ -1,34 +1,30 @@
 // @flow
 import React, { Component } from "react";
-import styled from "styled-components";
 import { Draggable } from "react-beautiful-dnd";
-import DealsList from "../Primatives/deal-list";
+import DealsList from "../Primatives/DealsList";
 import Title from "../Primatives/title";
+import { withStyles } from "@material-ui/core/styles";
+import Header from "./header";
 
-const Container = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
-const Header = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background-color: ${({ isDragging }) => (isDragging ? "#81d4fa" : "#03a9f4")};
-  transition: background-color 0.1s ease;
-  &:hover {
-    background-color: #81d4fa;
+const styles = () => ({
+  container: {
+    display: "flex",
+    flexDirection: "column"
   }
-`;
+});
 
-export default class Column extends Component {
+class Column extends Component {
   render() {
-    const { title, deals, index } = this.props;
+    const { title, deals, index, classes } = this.props;
     return (
       <Draggable draggableId={title} index={index}>
         {(provided, snapshot) => (
-          <Container ref={provided.innerRef} {...provided.draggableProps}>
-            <Header isDragging={snapshot.isDragging}>
+          <div
+            className={classes.container}
+            ref={provided.innerRef}
+            {...provided.draggableProps}
+          >
+            <Header className={classes.header} isDragging={snapshot.isDragging}>
               <Title
                 isDragging={snapshot.isDragging}
                 {...provided.dragHandleProps}
@@ -43,9 +39,11 @@ export default class Column extends Component {
               internalScroll={this.props.isScrollable}
               isCombineEnabled={Boolean(this.props.isCombineEnabled)}
             />
-          </Container>
+          </div>
         )}
       </Draggable>
     );
   }
 }
+
+export default withStyles(styles)(Column);

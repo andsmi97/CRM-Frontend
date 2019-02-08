@@ -1,35 +1,26 @@
 const firstContact = {
   id: "1",
-  name: "Первый контакт",
-  avatarUrl:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_TNh87d2_yMhP44u9QtVmzcuZO5eG6zBAI1Z7BZkTTLl1ajwX"
+  name: "Первый контакт"
 };
 
 const meetingArranged = {
   id: "2",
-  name: "Назначена встреча",
-  avatarUrl:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQOe_AHmQ924nTKIlZqkV1Oms8S0Kpx-dhhjTtcPkFMJ25F4u0dfw"
+  name: "Назначена встреча"
 };
 
 const offerSent = {
   id: "3",
-  name: "Отправлено КП",
-  avatarUrl: "https://icons-for-free.com/free-icons/png/512/2754583.png"
+  name: "Отправлено КП"
 };
 
 const contractSent = {
   id: "4",
-  name: "Выслан договор",
-  avatarUrl:
-    "https://www.shareicon.net/data/256x256/2016/05/24/770106_man_512x512.png"
+  name: "Выслан договор"
 };
 
 const inDevelopment = {
   id: "5",
-  name: "Исполнение обязанностей",
-  avatarUrl:
-    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLSQ2nhj55BneKsrw0poSCp94LVtBEQ2ueJ7oYHXv_lIf_bLlE"
+  name: "Исполнение обязанностей"
 };
 
 export const stages = [
@@ -199,34 +190,6 @@ export const deals = [
   }
 ];
 
-let idCount = 0;
-
-export const getDeals = count =>
-  Array.from({ length: count }, (v, k) => k).map(() => {
-    const random = deals[Math.floor(Math.random() * deals.length)];
-
-    const custom = {
-      id: `deal-${idCount++}`,
-      content: random.content,
-      manager: random.manager,
-      stage: random.stage
-    };
-
-    return custom;
-  });
-
-export const getStages = count =>
-  Array.from({ length: count }, (v, k) => k).map(() => {
-    const random = stages[Math.floor(Math.random() * stages.length)];
-
-    const custom = {
-      id: `stage-${idCount++}`,
-      name: random.name
-    };
-
-    return custom;
-  });
-
 const getByStage = (stage, items) => items.filter(deal => deal.stage === stage);
 
 export const stageDealMap = stages.reduce(
@@ -236,12 +199,3 @@ export const stageDealMap = stages.reduce(
   }),
   {}
 );
-
-export const generateDealMap = dealsCount =>
-  stages.reduce(
-    (previous, stage) => ({
-      ...previous,
-      [stage.name]: getDeals(dealsCount / stages.length)
-    }),
-    {}
-  );

@@ -1,23 +1,18 @@
 // @flow
 import React, { Component } from "react";
-import styled, { createGlobalStyle } from "styled-components";
 import Column from "./column";
+import { withStyles } from "@material-ui/core/styles";
 import reorder, { reorderDealMap } from "../../reorder";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
-const ParentContainer = styled.div`
-  height: ${({ height }) => height};
-  overflow-x: hidden;
-  overflow-y: auto;
-`;
-
-const Container = styled.div`
-  min-height: 100vh;
-  min-width: 100vw;
-  display: inline-flex;
-`;
-
-export default class Board extends Component {
+const styles = {
+  container: {
+    minHeight: "100%",
+    minWidth: "100%",
+    display: "inline-flex"
+  }
+};
+class Board extends Component {
   static defaultProps = {
     isCombineEnabled: false
   };
@@ -26,8 +21,6 @@ export default class Board extends Component {
     columns: this.props.initial,
     ordered: Object.keys(this.props.initial)
   };
-
-  boardRef;
 
   onDragEnd = result => {
     if (result.combine) {
@@ -92,19 +85,22 @@ export default class Board extends Component {
   };
 
   render() {
+    const { classes } = this.props;
     const { columns, ordered } = this.state;
-    const { containerHeight } = this.props;
-
     const board = (
       <Droppable
         droppableId="board"
         type="COLUMN"
         direction="horizontal"
-        ignoreContainerClipping={Boolean(containerHeight)}
+        ignoreContainerClipping={false}
         isCombineEnabled={this.props.isCombineEnabled}
       >
         {provided => (
-          <Container ref={provided.innerRef} {...provided.droppableProps}>
+          <div
+            className={classes.container}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
             {ordered.map((key, index) => (
               <Column
                 key={key}
@@ -115,21 +111,17 @@ export default class Board extends Component {
                 isCombineEnabled={this.props.isCombineEnabled}
               />
             ))}
-          </Container>
+          </div>
         )}
       </Droppable>
     );
 
     return (
       <React.Fragment>
-        <DragDropContext onDragEnd={this.onDragEnd}>
-          {containerHeight ? (
-            <ParentContainer height={containerHeight}>{board}</ParentContainer>
-          ) : (
-            board
-          )}
-        </DragDropContext>
+        <DragDropContext onDragEnd={this.onDragEnd}>{board}</DragDropContext>
       </React.Fragment>
     );
   }
 }
+
+export default withStyles(styles, { withTheme: true })(Board);
