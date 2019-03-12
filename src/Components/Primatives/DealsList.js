@@ -1,9 +1,8 @@
 import React from "react";
-import { Droppable, Draggable } from "react-beautiful-dnd";
-import DealItem from "./DealItem";
+import { Droppable } from "react-beautiful-dnd";
 import { withStyles } from "@material-ui/styles";
 import ListWrapper from "./ListWrapper";
-
+import InnerDealList from "./InnerDealList";
 const styles = () => ({
   dropZone: {
     minHeight: "74vh",
@@ -21,32 +20,6 @@ const styles = () => ({
   position: "relative",
   padding: 20
 });
-
-class InnerDealList extends React.Component {
-  shouldComponentUpdate(nextProps) {
-    if (nextProps.deals !== this.props.deals) {
-      return true;
-    }
-
-    return false;
-  }
-
-  render() {
-    return this.props.deals.map((deal, index) => (
-      <Draggable key={deal.id} draggableId={deal.id} index={index}>
-        {(dragProvided, dragSnapshot) => (
-          <DealItem
-            key={deal.id}
-            deal={deal}
-            isDragging={dragSnapshot.isDragging}
-            isGroupedOver={Boolean(dragSnapshot.combineTargetFor)}
-            provided={dragProvided}
-          />
-        )}
-      </Draggable>
-    ));
-  }
-}
 
 class InnerList extends React.Component {
   render() {

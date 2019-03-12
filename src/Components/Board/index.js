@@ -1,9 +1,26 @@
 // @flow
 import React, { Component } from "react";
 import Column from "./Column";
+import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import reorder, { reorderDealMap } from "./reorder";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
+import { changeOrder, changeColumns } from "./actions";
+import DealModal from "../DealModal";
+const mapStateToProps = state => {
+  return {
+    columns: state.boardReducer.columns,
+    ordered: state.boardReducer.ordered
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    changeOrder: ordered => dispatch(changeOrder(ordered)),
+    changeColumns: columns => dispatch(changeColumns(columns))
+    // addDeal: () => dispatch(addDeal())
+  };
+};
 
 const styles = {
   container: {
@@ -14,41 +31,37 @@ const styles = {
 };
 class Board extends Component {
   static defaultProps = {
-    isCombineEnabled: false
-  };
-
-  state = {
-    columns: this.props.initial,
-    ordered: Object.keys(this.props.initial)
+    isCombineEnabled: true
   };
 
   onDragEnd = result => {
-    if (result.combine) {
+    const { changeOrder, changeColumns } = this.props;
+    const { combine, destination, source, type } = result;
+
+    if (combine) {
       if (result.type === "COLUMN") {
-        const shallow = [...this.state.ordered];
+        const shallow = [...this.props.ordered];
         shallow.splice(result.source.index, 1);
-        this.setState({ ordered: shallow });
+        changeOrder(shallow);
         return;
       }
 
-      const column = this.state.columns[result.source.droppableId];
+      const column = this.props.columns[result.source.droppableId];
       const withDealRemoved = [...column];
       withDealRemoved.splice(result.source.index, 1);
       const columns = {
-        ...this.state.columns,
+        ...this.props.columns,
         [result.source.droppableId]: withDealRemoved
       };
-      this.setState({ columns });
+      changeColumns(columns);
+
       return;
     }
 
     // dropped nowhere
-    if (!result.destination) {
+    if (!destination) {
       return;
     }
-
-    const source = result.source;
-    const destination = result.destination;
 
     // did not move anywhere - can bail early
     if (
@@ -57,43 +70,34 @@ class Board extends Component {
     ) {
       return;
     }
-
-    // reordering column
-    if (result.type === "COLUMN") {
+    if (type === "COLUMN") {
       const ordered = reorder(
-        this.state.ordered,
+        this.props.ordered,
         source.index,
         destination.index
       );
-
-      this.setState({
-        ordered
-      });
-
+      changeOrder(ordered);
       return;
     }
 
     const data = reorderDealMap({
-      dealMap: this.state.columns,
+      dealMap: this.props.columns,
       source,
       destination
     });
 
-    this.setState({
-      columns: data.dealMap
-    });
+    changeColumns(data.dealMap);
   };
 
   render() {
-    const { classes } = this.props;
-    const { columns, ordered } = this.state;
+    const { classes, columns, ordered } = this.props;
     const board = (
       <Droppable
         droppableId="board"
         type="COLUMN"
         direction="horizontal"
         ignoreContainerClipping={false}
-        isCombineEnabled={this.props.isCombineEnabled}
+        // isCombineEnabled={this.props.isCombineEnabled}
       >
         {provided => (
           <div
@@ -108,7 +112,7 @@ class Board extends Component {
                 title={key}
                 deals={columns[key]}
                 isScrollable={this.props.withScrollableColumns}
-                isCombineEnabled={this.props.isCombineEnabled}
+                // isCombineEnabled={this.props.isCombineEnabled}
               />
             ))}
           </div>
@@ -119,9 +123,13 @@ class Board extends Component {
     return (
       <React.Fragment>
         <DragDropContext onDragEnd={this.onDragEnd}>{board}</DragDropContext>
+        <DealModal />
       </React.Fragment>
     );
   }
 }
 
-export default withStyles(styles, { withTheme: true })(Board);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles, { withTheme: true })(Board));

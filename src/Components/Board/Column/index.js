@@ -2,7 +2,6 @@
 import React, { Component } from "react";
 import { Draggable } from "react-beautiful-dnd";
 import DealsList from "../../Primatives/DealsList";
-import Title from "../../Primatives/title";
 import { withStyles } from "@material-ui/core/styles";
 import Header from "../../Primatives/header";
 
@@ -10,6 +9,14 @@ const styles = () => ({
   container: {
     display: "flex",
     flexDirection: "column"
+  },
+  title: {
+    transition: "background-color ease 0.2s",
+    textAlign: "center",
+    flexGrow: 1,
+    userSelect: "none",
+    position: "relative",
+    padding: 20
   }
 });
 
@@ -17,20 +24,22 @@ class Column extends Component {
   render() {
     const { title, deals, index, classes } = this.props;
     return (
-      <Draggable draggableId={title} index={index}>
+      <Draggable draggableId={title} index={index} isDragDisabled={true}>
         {(provided, snapshot) => (
           <div
             className={classes.container}
             ref={provided.innerRef}
             {...provided.draggableProps}
           >
-            <Header className={classes.header} isDragging={snapshot.isDragging}>
-              <Title
-                isDragging={snapshot.isDragging}
-                {...provided.dragHandleProps}
-              >
+            <Header
+              className={classes.header}
+              isDragging={snapshot.isDragging}
+              index={index}
+              title={title}
+            >
+              <h4 className={classes.title} {...provided.dragHandleProps}>
                 {title}
-              </Title>
+              </h4>
             </Header>
             <DealsList
               listId={title}

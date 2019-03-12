@@ -6,15 +6,29 @@ const useStyles = makeStyles({
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: props => (props.isDragging ? "#81d4fa" : "#03a9f4"),
-    "&:hover": { backgroundColor: "#81d4fa" },
+    backgroundColor: props => {
+      if (props.title === "Успех") {
+        return "#00e676";
+      }
+      if (props.title === "Неудача") {
+        return "#ff7043";
+      }
+      return props.isDragging
+        ? "#bbdefb"
+        : props.index % 2
+        ? "#42a5f5"
+        : "#64b5f6";
+    },
+    "&:hover": { backgroundColor: "#bbdefb" },
     transition: "background-color 0.1s ease"
   }
 });
 
 const Header = props => {
   const classes = useStyles({
-    isDragging: props.isDragging
+    isDragging: props.isDragging,
+    index: props.index,
+    title: props.title
   });
   return <div className={classes.root}>{props.children}</div>;
 };

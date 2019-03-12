@@ -21,13 +21,21 @@ import PipelineIcon from "@material-ui/icons/FilterList";
 import SettingsIcon from "@material-ui/icons/Settings";
 import AssignmentIcon from "@material-ui/icons/Assignment";
 import AssessmentIcon from "@material-ui/icons/Assessment";
+import Fab from "@material-ui/core/Fab";
+import AddIcon from "@material-ui/icons/Add";
 import Board from "../../Components/Board";
 import Avatar from "@material-ui/core/Avatar";
 import { openSnack, openAlert } from "../../actions";
+import { addDeal, openDealModal } from "../../Components/Board/actions";
+
+import { openDrawer, closeDrawer, changeSection } from "./actions";
+import DealModal from "../../Components/DealModal";
 
 const mapStateToProps = state => {
   return {
-    deals: state.dealsReducer
+    deals: state.dealsReducer,
+    open: state.routeReducer.open,
+    section: state.routeReducer.section
   };
 };
 
@@ -35,7 +43,12 @@ const mapDispatchToProps = dispatch => {
   return {
     openSnack: (type, message) => dispatch(openSnack(type, message)),
     openAlert: (message, alertFunction) =>
-      dispatch(openAlert(message, alertFunction))
+      dispatch(openAlert(message, alertFunction)),
+    openDrawer: () => dispatch(openDrawer()),
+    closeDrawer: () => dispatch(closeDrawer()),
+    changeSection: section => dispatch(changeSection(section)),
+    addDeal: () => dispatch(addDeal()),
+    openDealModal: type => dispatch(openDealModal(type))
   };
 };
 
@@ -73,6 +86,11 @@ const styles = theme => ({
   drawerPaper: {
     width: drawerWidth
   },
+  fab: {
+    position: "fixed",
+    bottom: theme.spacing.unit * 2,
+    right: theme.spacing.unit * 2
+  },
   drawerHeader: {
     display: "flex",
     alignItems: "center",
@@ -102,21 +120,16 @@ const styles = theme => ({
 });
 
 class PersistentDrawerLeft extends React.Component {
-  state = {
-    open: false
-  };
-
-  handleDrawerOpen = () => {
-    this.setState({ open: true });
-  };
-
-  handleDrawerClose = () => {
-    this.setState({ open: false });
-  };
-
   render() {
-    const { classes, theme } = this.props;
-    const { open } = this.state;
+    const {
+      classes,
+      theme,
+      open,
+      openDrawer,
+      closeDrawer,
+      changeSection,
+      section
+    } = this.props;
 
     return (
       <div className={classes.root}>
@@ -131,7 +144,7 @@ class PersistentDrawerLeft extends React.Component {
             <IconButton
               color="inherit"
               aria-label="Open drawer"
-              onClick={this.handleDrawerOpen}
+              onClick={openDrawer}
               className={classNames(classes.menuButton, open && classes.hide)}
             >
               <MenuIcon />
@@ -159,7 +172,7 @@ class PersistentDrawerLeft extends React.Component {
             {"Неманова"}
             <br />
             {"Анна Сергеевна"}
-            <IconButton onClick={this.handleDrawerClose}>
+            <IconButton onClick={closeDrawer}>
               {theme.direction === "ltr" ? (
                 <ChevronLeftIcon />
               ) : (
@@ -169,19 +182,19 @@ class PersistentDrawerLeft extends React.Component {
           </div>
           <Divider />
           <List>
-            <ListItem button>
+            <ListItem button onClick={() => changeSection("Pipeline")}>
               <ListItemIcon>
                 <PipelineIcon />
               </ListItemIcon>
               <ListItemText primary={"Воронка"} />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => changeSection("Reports")}>
               <ListItemIcon>
                 <AssignmentIcon />
               </ListItemIcon>
               <ListItemText primary={"Отчеты"} />
             </ListItem>
-            <ListItem button>
+            <ListItem button onClick={() => changeSection("Statistics")}>
               <ListItemIcon>
                 <AssessmentIcon />
               </ListItemIcon>
@@ -190,7 +203,7 @@ class PersistentDrawerLeft extends React.Component {
           </List>
           <Divider />
           <List>
-            <ListItem button key={"Настройки"}>
+            <ListItem button onClick={() => changeSection("Settings")}>
               <ListItemIcon>
                 <SettingsIcon />
               </ListItemIcon>
@@ -204,7 +217,23 @@ class PersistentDrawerLeft extends React.Component {
           })}
         >
           <div className={classes.drawerHeader} />
-          <Board initial={this.props.deals} withScrollableColumns />
+          {section === "Pipeline" && (
+            <div>
+              <Board withScrollableColumns />
+              <Fab
+                className={classes.fab}
+                color="primary"
+                onClick={() => this.props.openDealModal("insert")}
+              >
+                <AddIcon />
+              </Fab>
+              <DealModal />
+            </div>
+          )}
+          {section === "News" && <div />}
+          {section === "Reports" && <div />}
+          {section === "Statistics" && <div />}
+          {section === "Settings" && <div />}
         </main>
       </div>
     );

@@ -20,6 +20,7 @@ export const ALERT_STATUS_CLOSE = "ALERT_STATUS_CLOSE";
 export const ALERT_STATUS_OPEN = "ALERT_STATUS_OPEN";
 export const ALERT_STATUS_ACCEPT = "ALERT_STATUS_ACCEPT";
 
+
 export const colors = {
   blue: {
     deep: "rgb(0, 121, 191)",
@@ -38,8 +39,7 @@ export const colors = {
   },
   green: "rgb(185, 244, 188)",
   white: "white",
-  purple: "rebeccapurple",
-
+  purple: "rebeccapurple"
 };
 
 export const grid = 8;

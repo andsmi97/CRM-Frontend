@@ -1,4 +1,3 @@
-// @flow
 import React from "react";
 import { grid } from "../../constants";
 import ItemContainer from "./ItemContainer";
@@ -18,6 +17,10 @@ const styles = () => ({
     flexBasis: "100%",
     display: "flex",
     flexDirection: "column"
+  },
+  row: {
+    margin: 0,
+    padding: 0
   }
 });
 
@@ -36,10 +39,10 @@ class DealItem extends React.PureComponent {
           alt={deal.manager.name}
         />
         <div className={classes.content}>
-          <h4 className="no-gutters">{deal.content}</h4>
-          <p className="no-gutters">{deal.contact}</p>
-          <p className="no-gutters">{deal.phone}</p>
-          <p className="no-gutters">{deal.price} Руб</p>
+          <h4 className={classes.row}>{deal.name}</h4>
+          <p className={classes.row}>{deal.contact}</p>
+          <p className={classes.row}>{deal.phone}</p>
+          <p className={classes.row}>{deal.price} Руб</p>
         </div>
       </ItemContainer>
     );
